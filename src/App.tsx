@@ -3,19 +3,23 @@ import styles from "./app.module.scss";
 import { Pagination } from "./Components/Pagination";
 import { Card, Flex, Skeleton } from "antd";
 import { range } from "./helpers/range";
-import { postPerPage } from "./variables";
+import { postPerPage, baseUrl } from "./variables";
+import { Link } from "react-router";
 
-type Post = {
+// const baseUrl = "http://localhost:3000/";
+// const storageKey = "page";
+
+export type Post = {
   body: string;
   title: string;
   id: number;
 };
 
-function App() {
+const App = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-
+  console.log(currentPage);
   const postsOnPage = posts.slice(
     (currentPage - 1) * postPerPage,
     currentPage * postPerPage,
@@ -26,13 +30,24 @@ function App() {
       const responce = await fetch(
         `https://jsonplaceholder.typicode.com/posts`,
       );
-      const data = await responce.json();
+      const data: Post[] = await responce.json();
       setPosts(data);
 
       setIsLoading(false);
     }
     getData();
+
+    const storageInfo = Number(window.localStorage.getItem("page"));
+    setCurrentPage(storageInfo || 1);
   }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("page", currentPage.toString());
+  }, [currentPage]);
+
+  const changePage = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -42,19 +57,25 @@ function App() {
         ))}
       {!isLoading &&
         postsOnPage.map(({ id, title, body }) => (
-          <Flex key={id} gap="medium" align="start" vertical>
-            <Card loading={isLoading} style={{ minWidth: "100%" }}>
-              <Card.Meta title={title} description={<p>{body}</p>} />
-            </Card>
-          </Flex>
+          <Link
+            className={styles["card-wrapper"]}
+            key={id}
+            to={`${baseUrl}${id}`}
+          >
+            <Flex gap="medium" align="start" vertical>
+              <Card style={{ minWidth: "100%" }}>
+                <Card.Meta title={title} description={<p>{body}</p>} />
+              </Card>
+            </Flex>
+          </Link>
         ))}
       <Pagination
-        numOfPosts={posts.length}
-        setCurrentPage={setCurrentPage}
+        postsCount={posts.length}
+        changePage={changePage}
         currentPage={currentPage}
       />
     </div>
   );
-}
+};
 
 export default App;
