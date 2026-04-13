@@ -19,7 +19,6 @@ const App = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  console.log(currentPage);
   const postsOnPage = posts.slice(
     (currentPage - 1) * postPerPage,
     currentPage * postPerPage,
