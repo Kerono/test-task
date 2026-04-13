@@ -3,11 +3,8 @@ import styles from "./app.module.scss";
 import { Pagination } from "./Components/Pagination";
 import { Card, Flex, Skeleton } from "antd";
 import { range } from "./helpers/range";
-import { postPerPage, baseUrl } from "./variables";
+import { postPerPage } from "./variables";
 import { Link } from "react-router";
-
-// const baseUrl = "http://localhost:3000/";
-// const storageKey = "page";
 
 export type Post = {
   body: string;
@@ -56,11 +53,7 @@ const App = () => {
         ))}
       {!isLoading &&
         postsOnPage.map(({ id, title, body }) => (
-          <Link
-            className={styles["card-wrapper"]}
-            key={id}
-            to={`${baseUrl}${id}`}
-          >
+          <Link className={styles["card-wrapper"]} key={id} to={`/${id}`}>
             <Flex gap="medium" align="start" vertical>
               <Card style={{ minWidth: "100%" }}>
                 <Card.Meta title={title} description={<p>{body}</p>} />
