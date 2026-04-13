@@ -1,0 +1,16 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: auto;
+  button {
+    border: none;
+    background-color: transparent;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+  }
+}
